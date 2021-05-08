@@ -1,5 +1,6 @@
 package com.boot.rest.springbootRest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,12 +22,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.boot.rest.springbootRest.exception.ProductNotFoundException;
+
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 	
 	@Autowired
 	ProductService productservice;
+	
+	
+	@GetMapping(path="/getByID/{id}")
+	public ResponseEntity getEmloyeeById(@PathVariable(value="id") int id) {
+		Product product = productservice.getProductById(id);
+		if(product == null) {
+			throw new ProductNotFoundException();
+		}
+		
+		return new ResponseEntity(product, HttpStatus.OK);
+	}
 
 	@GetMapping(path = "/attibutes")
 	public ResponseEntity getProductByAttributes(@RequestParam(value ="id",required = false) int id,@RequestParam(value="name",required = false) String name) throws Exception {
@@ -42,7 +56,7 @@ public class ProductController {
 		
 	}
 	
-	
+	//enhanced get endpoint
 	@GetMapping(path = "/attibutes_v1")
 	public ResponseEntity getProductByAttributesv1(@RequestParam MultiValueMap<String, String> allParams) throws Exception {
 		if(allParams.isEmpty()) {
@@ -81,22 +95,33 @@ public class ProductController {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 	
-	@PutMapping(path="updateById/{id}")
+	@PutMapping(path="/updateById/{id}")
 	public ResponseEntity updateProductById(@PathVariable(value="id") int id, @RequestBody Product product) throws Exception {
 		Product updateproduct = productservice.getProductById(id);
 		if(updateproduct == null) {
 			throw new Exception("no product found to update");
 		}
 		
-		List<Product> finalproductList = productservice.updateProduct(id, new Product(1, "casual shirt", 1000));
+		List<Product> finalproductList = productservice.updateProduct(id, product);
 		return new ResponseEntity(finalproductList, HttpStatus.ACCEPTED);
 		
 	}
 	
-	
-	
-	
-	
+	@PatchMapping(path="/saveorupdate/{id}")
+	public ResponseEntity saveorupdate(@PathVariable(value="id", required = false) int id, @RequestBody Product product) throws Exception {
+		List<Product> finalproductList =null;
+		Product updateproduct = productservice.getProductById(id);
+		if(updateproduct == null) {
+			List<Product> productList = new ArrayList<Product>();
+			productList.add(product);
+			finalproductList = productservice.saveProduct(productList);
+			return new ResponseEntity(finalproductList, HttpStatus.ACCEPTED);
+		}
+		
+		finalproductList = productservice.updateProduct(id, new Product(1, "casual shirt", 1000));
+		return new ResponseEntity(finalproductList, HttpStatus.ACCEPTED);
+		
+	}
 	
 	private List<Product> getProductsByAttributes(int id,String name){
 		List<Product> productList =productservice.getProductList();
