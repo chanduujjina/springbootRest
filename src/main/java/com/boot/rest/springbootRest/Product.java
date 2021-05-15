@@ -2,6 +2,10 @@ package com.boot.rest.springbootRest;
 
 public class Product {
 
+	public Product() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	public Product(int productId, String productName, int price) {
 		super();
 		this.productId = productId;
