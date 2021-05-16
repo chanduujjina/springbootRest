@@ -1,6 +1,8 @@
 package com.boot.rest.springbootRest;
 
-public class Product {
+
+
+public class Product  {
 
 	public Product() {
 		super();

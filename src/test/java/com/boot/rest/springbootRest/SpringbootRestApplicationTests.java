@@ -81,6 +81,12 @@ public class SpringbootRestApplicationTests {
 		System.out.println(responseEntity.getBody());
 	}
 	
+	@Test
+	public void testDeleteProductById() {
+		ResponseEntity<List> responseEntity = restTemplate.exchange("http://localhost:8080/product-manage/product/deleteById/1", HttpMethod.DELETE,entity, List.class);
+		System.out.println(responseEntity.getBody());
+	}
+	
 	private List<Product> getProductListAsString() throws JsonProcessingException{
 		
 		ObjectMapper mapper = new ObjectMapper();

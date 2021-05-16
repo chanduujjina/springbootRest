@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.websocket.server.PathParam;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -78,6 +75,10 @@ public class ProductController {
 		ResponseEntity entity = new ResponseEntity(productList, HttpStatus.OK);
 		return entity;
 	}
+	
+	public List<Product> saveProduct_v1(){
+		return null;
+	}
 	@PostMapping(path="/saveProduct")
 	public ResponseEntity saveProduct(@RequestBody List<Product> productList) {
 		List<Product> finalproductList = productservice.saveProduct(productList);
@@ -92,7 +93,7 @@ public class ProductController {
 			throw new Exception("no product found to delete");
 		}
 		List<Product> finalproductList= productservice.deleteProductByID(id);
-		return new ResponseEntity(HttpStatus.NO_CONTENT);
+		return new ResponseEntity(finalproductList,HttpStatus.NO_CONTENT);
 	}
 	
 	@PutMapping(path="/updateById/{id}")
