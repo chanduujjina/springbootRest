@@ -2,6 +2,7 @@ package com.boot.rest.springbootRest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -122,6 +124,14 @@ public class ProductController {
 		finalproductList = productservice.updateProduct(id, new Product(1, "casual shirt", 1000));
 		return new ResponseEntity(finalproductList, HttpStatus.ACCEPTED);
 		
+	}
+	
+	@GetMapping(path="/headerTest")
+	public ResponseEntity getHeaderInfo(@RequestHeader("clientId") String clientId,@RequestHeader("jwtToken") String JwtToken) {
+		 StringJoiner joinNames = new StringJoiner(",");
+		 joinNames.add("clientId-"+clientId);
+		 joinNames.add("JwtToken-"+JwtToken);
+		return new ResponseEntity(joinNames.toString(), HttpStatus.OK);
 	}
 	
 	private List<Product> getProductsByAttributes(int id,String name){
